@@ -1,0 +1,8 @@
+configMapGenerator:
+  - name: logstash-pipeline
+    files:
+      - logstash.conf
+
+resources:
+  - deployment.yaml
+  - service.yaml

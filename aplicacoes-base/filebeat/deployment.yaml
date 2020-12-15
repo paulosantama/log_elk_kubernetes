@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logging-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: logging-app
+  template:
+    metadata:
+      labels:
+        name: logging-app
+    spec:
+      containers:
+        - args:
+            - -c
+            - /etc/filebeat/filebeat.yaml
+            - -e
+          image: elastic/filebeat:7.8.0
+          name: beat
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/filebeat/
+              name: beat-config
+            - mountPath: /tmp/
+              name: log-directory
+        - image: sladesoftware/log-application:latest
+          name: logging-app
+          resources: {}
+          volumeMounts:
+            - mountPath: /tmp/
+              name: log-directory
+      dnsPolicy: ClusterFirst
+      hostname: logging-app
+      volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+              - key: filebeat.yaml
+                path: filebeat.yaml
+            name: beat-config-d9btb676hg
+          name: beat-config
+        - emptyDir: {}
+          name: log-directory

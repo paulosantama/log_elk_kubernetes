@@ -1,0 +1,5 @@
+bases:
+  - ./elasticsearch
+  - ./kibana
+  - ./logstash
+  - ./filebeat

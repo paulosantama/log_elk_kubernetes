@@ -1,0 +1,7 @@
+configMapGenerator:
+  - name: beat-config
+    files:
+      - filebeat.yaml
+
+resources:
+  - deployment.yaml

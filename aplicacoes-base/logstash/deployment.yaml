@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: logstash
+  template:
+    metadata:
+      labels:
+        name: logstash
+    spec:
+      containers:
+        - command:
+            - logstash
+          image: logstash:7.8.0
+          name: logstash
+          ports:
+            - containerPort: 5044
+              name: filebeat
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/share/logstash/pipeline
+              name: logstash-pipeline
+      dnsPolicy: ClusterFirst
+      hostname: logstash
+      volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+              - key: logstash.conf
+                path: logstash.conf
+            name: logstash-pipeline-b4d94kdcm2
+          name: logstash-pipeline
